@@ -1,0 +1,40 @@
+# MPHC (MultiplayerHardcore) config.
+
+# Time of play
+timeOfPlay:
+  MONDAY: "open"
+  TUESDAY: "open"
+  WEDNESDAY: "open"
+  THURSDAY: "open"
+  FRIDAY: "open"
+  SATURDAY: "open"
+  SUNDAY: "open"
+
+# Fancy death messages
+messages:
+  # Will be appended to every other message.
+  ending: "Your journey begins anew..."
+  # Messages for specific death causes
+  DROWNING:
+    - "%1$s drowned."
+  FALL:
+    - "%1$s falls to doom!"
+  PROJECTILE:
+    - "%1$s was shot to death by %2$s."
+  LIGHTNING:
+    - "And it came to pass that %1$s was struck by lightning!"
+  ENTITY_EXPLOSION:
+    - "%2$s blew itself up, taking %1$s with it."
+  FALLING_BLOCK:
+    - "%1$s was crushed by a falling %2$s."
+  DRAGON_BREATH:
+    - "%1$s burned up while making a valiant stand against %2$s."
+  MAGIC:
+    - "%1$s was snuffed out by $2%s's evil spell."
+  # Messages for when there are no specific messages for the death cause in question.
+  generic:
+    - "%1$s walked into the light."
+
+worldAttemptPrefix: "attempt"
+# The current attempt number. DO NOT EDIT!
+attempt: 1

@@ -1,0 +1,8 @@
+name: MultiplayerHardcore
+author: ArdiMaster
+version: 1.0-SNAPSHOT
+main: de.diepixelecke.mphc.MultiplayerHardcore
+api-version: 1.16
+depend:
+  - Multiverse-Core
+  - Multiverse-NetherPortals
