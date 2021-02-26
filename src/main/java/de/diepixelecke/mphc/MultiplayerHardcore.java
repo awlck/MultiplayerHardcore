@@ -49,7 +49,6 @@ public class MultiplayerHardcore extends JavaPlugin {
         else
             msgs = getConfig().getStringList("messages.generic");
         String theMessage = msgs.get(random.nextInt(msgs.size()));
-        // return String.format(theMessage + " %s", playerName, getConfig().getString("messages.ending"));
         return String.format(theMessage + "\n%3$s", playerName, source, getConfig().getString("messages.ending"));
     }
 

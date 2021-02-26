@@ -29,6 +29,7 @@
             <version>1.16.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <!-- MultiverseCore: needs to be manually placed in local repo -->
         <dependency>
             <groupId>com.onarandombox</groupId>
             <artifactId>MultiverseCore</artifactId>
