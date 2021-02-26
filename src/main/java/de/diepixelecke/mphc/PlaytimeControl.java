@@ -1,21 +1,13 @@
 package de.diepixelecke.mphc;
 
-import org.bukkit.Bukkit;
-
-import java.io.ByteArrayInputStream;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.chrono.ChronoLocalDateTime;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.logging.Level;
 
 public class PlaytimeControl {
     private final MultiplayerHardcore plugin;
-    private HashMap<DayOfWeek, PlaytimeRule> rules;
+    private final HashMap<DayOfWeek, PlaytimeRule> rules = new HashMap<>();
 
     PlaytimeControl(MultiplayerHardcore main) {
         plugin = main;
@@ -31,16 +23,16 @@ public class PlaytimeControl {
         for (DayOfWeek d: DayOfWeek.values()) {
             String hoursForDay = plugin.getConfig().getString("timeOfPlay." + d.name());
             if (hoursForDay == null || hoursForDay.equalsIgnoreCase("open")) {
-                rules.put(d, new PlaytimeRule(d, RuleType.OPEN));
+                rules.put(d, new OpenRule());
                 continue;
             } else if (hoursForDay.equalsIgnoreCase("closed")) {
-                rules.put(d, new PlaytimeRule(d, RuleType.CLOSED));
+                rules.put(d, new ClosedRule());
                 continue;
             }
 
             LocalTime beginning = LocalTime.parse(hoursForDay.substring(0,5));
             LocalTime ending = LocalTime.parse(hoursForDay.substring(6));
-            rules.put(d, new PlaytimeRule(d, beginning, ending));
+            rules.put(d, new TimeRule(beginning, ending));
         }
     }
 
@@ -48,12 +40,16 @@ public class PlaytimeControl {
         LocalDate today = LocalDate.now();
         LocalTime now = LocalTime.now();
         PlaytimeRule rule = rules.get(today.getDayOfWeek());
+        if (rule instanceof OpenRule) return true;
+        if (rule instanceof ClosedRule) return false;
+        TimeRule tRule = (TimeRule) rule;
+        if ((tRule.endsNextDay && now.isAfter(tRule.begins)) || (now.isAfter(tRule.begins) && now.isBefore(tRule.ends))) return true;
         PlaytimeRule yesterday = rules.get(today.minusDays(1).getDayOfWeek());
-        if (rule.getType() == RuleType.OPEN) return true;
-        if (rule.getType() == RuleType.CLOSED) return false;
-        return (rule.endsNextDay && now.isAfter(rule.begins)) ||
-                (yesterday.endsNextDay && now.isBefore(yesterday.ends)) ||
-                (now.isAfter(rule.begins) && now.isBefore(rule.ends));
+        if (yesterday instanceof TimeRule) {
+            TimeRule tYesterday = (TimeRule) yesterday;
+            return tYesterday.endsNextDay && now.isBefore(tYesterday.ends);
+        }
+        return false;
     }
 
     String getNextPlaytime() {
@@ -61,64 +57,42 @@ public class PlaytimeControl {
         LocalDate today = LocalDate.now();
         LocalTime now = LocalTime.now();
         PlaytimeRule rule = rules.get(today.getDayOfWeek());
-        if (rule.type != RuleType.CLOSED && now.isBefore(rule.begins)) {
-            return "today at " + rule.begins.toString();
+        TimeRule t;
+        if (rule instanceof TimeRule && now.isBefore((t = (TimeRule) rule).begins)) {
+            return "today at " + t.begins.toString();
         }
 
         for (long i = 1; i < 7; i++) {
             LocalDate theDay = today.plusDays(i);
             rule = rules.get(theDay.getDayOfWeek());
-            if (rule.type == RuleType.OPEN) return "on " + theDay.getDayOfWeek().toString();
-            if (rule.type == RuleType.CLOSED) continue;
-            return "on " + theDay.getDayOfWeek().toString() + " at " + rule.begins.toString();
+            if (rule instanceof OpenRule) return "on " + theDay.getDayOfWeek().toString();
+            if (rule instanceof ClosedRule) continue;
+            return "on " + theDay.getDayOfWeek().toString() + " at " + ((TimeRule) rule).begins.toString();
         }
         return "not for the foreseeable future";
     }
 
-    private static class PlaytimeRule {
-        private final RuleType type;
-        private final DayOfWeek day;
+    private interface PlaytimeRule {
+
+    }
+
+    private static class ClosedRule implements PlaytimeRule {
+
+    }
+
+    private static class OpenRule implements PlaytimeRule {
+
+    }
+
+    private static class TimeRule implements PlaytimeRule {
         private final LocalTime begins;
         private final LocalTime ends;
         private final boolean endsNextDay;
 
-        PlaytimeRule(DayOfWeek d, RuleType type) {
-            this.type = type;
-            day = d;
-            begins = null;
-            ends = null;
-            endsNextDay = false;
-        }
-
-        PlaytimeRule(DayOfWeek day, LocalTime begins, LocalTime ends) {
-            this.type = RuleType.TIME_CONTROL;
-            this.day = day;
+        TimeRule(LocalTime begins, LocalTime ends) {
             this.begins = begins;
             this.ends = ends;
             endsNextDay = ends.compareTo(begins) < 0;
         }
-
-        RuleType getType() {
-            return type;
-        }
-        DayOfWeek getDay() {
-            return day;
-        }
-        LocalTime getBegins() {
-            return begins;
-        }
-        LocalTime getEnds() {
-            return ends;
-        }
-        boolean getEndsNextDay() {
-            return endsNextDay;
-        }
-
-    }
-
-    enum RuleType {
-        TIME_CONTROL,
-        OPEN,
-        CLOSED
     }
 }
