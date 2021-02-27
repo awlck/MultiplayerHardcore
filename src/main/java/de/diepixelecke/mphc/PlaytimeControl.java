@@ -3,7 +3,9 @@ package de.diepixelecke.mphc;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
+import java.util.logging.Level;
 
 public class PlaytimeControl {
     private final MultiplayerHardcore plugin;
@@ -30,9 +32,18 @@ public class PlaytimeControl {
                 continue;
             }
 
-            LocalTime beginning = LocalTime.parse(hoursForDay.substring(0,5));
-            LocalTime ending = LocalTime.parse(hoursForDay.substring(6));
-            rules.put(d, new TimeRule(beginning, ending));
+            try {
+                LocalTime beginning = LocalTime.parse(hoursForDay.substring(0,5));
+                LocalTime ending;
+                String endingTime = hoursForDay.substring(6);
+                if (endingTime.equalsIgnoreCase("24:00")) ending = LocalTime.of(23, 59, 59);
+                else ending = LocalTime.parse(endingTime);
+                rules.put(d, new TimeRule(beginning, ending));
+            } catch (DateTimeParseException e) {
+                plugin.getLogger().log(Level.SEVERE, "Could not parse time " + e.getParsedString() + " (in playtime specification for " + d.name() + ")");
+                plugin.getLogger().log(Level.WARNING, "Using `open' specification for " + d.name());
+                rules.put(d, new OpenRule());
+            }
         }
     }
 
@@ -72,17 +83,11 @@ public class PlaytimeControl {
         return "not for the foreseeable future";
     }
 
-    private interface PlaytimeRule {
+    private interface PlaytimeRule { }
 
-    }
+    private static class ClosedRule implements PlaytimeRule { }
 
-    private static class ClosedRule implements PlaytimeRule {
-
-    }
-
-    private static class OpenRule implements PlaytimeRule {
-
-    }
+    private static class OpenRule implements PlaytimeRule { }
 
     private static class TimeRule implements PlaytimeRule {
         private final LocalTime begins;
