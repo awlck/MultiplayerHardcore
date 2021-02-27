@@ -13,6 +13,7 @@ yet)
 * Close the server on a schedule (i.e. only allow players onto the server at certain times) to ensure
 nobody grinds away every night and beats the game single-handedly
 
-Downloads coming soon^TM
+Release downloads coming soon(tm). Development builds may be available from
+[GitHub Actions](https://github.com/awlck/MultiplayerHardcore/actions/workflows/maven.yml).
 
 [How to configure](https://github.com/awlck/MultiplayerHardcore#config)
