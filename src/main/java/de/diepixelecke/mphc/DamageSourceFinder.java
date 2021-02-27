@@ -22,8 +22,7 @@ public class DamageSourceFinder {
             return damageSource.getName();
         } else if (event instanceof EntityDamageByBlockEvent) {
             Block damageSource = ((EntityDamageByBlockEvent) event).getDamager();
-            assert damageSource != null;
-            return damageSource.getType().toString();
+            return damageSource != null ? damageSource.getType().toString() : "";
         } else return "";
     }
 
