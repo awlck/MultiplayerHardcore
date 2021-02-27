@@ -60,11 +60,20 @@ and a player called "SomeGuy" is killed (shot) by a skeleton, the death message 
 However, if they were killed by a Zombie, the message would use the more generic "SomeGuy died"
 wording, since we didn't set a specific message for `ENTITY_ATTACK`.
 
-### `worldAttemptPrefix`
+### `attempt`
+* `attemptsToKeep`:
+  The number of old attempts to keep, in case you wish to revisit them. Set to a negative value to
+  keep *all* old attempts. (Can cause significant memory and disk usage!) The default is 10, i.e.
+  `attempt1` will be deleted when `attempt12` becomes active.
+* `worldPrefix`:
 The base name to use for worlds created by the plugin. The default is `attempt`, which means the
 worlds will be called `attempt1`, `attempt2`, and so on. (Consequently, the Nether for the first
 attempt will be called `attempt1_nether`, and the corresponding End will be called
 `attempt1_the_end`.)
+  
+### `stats`
+For each player (UUID), lists how often they have died of each cause. There is currently no way to
+output this nicely.
 
 ## Commands and Permissions
 MultiplayerHardcore does not currently have any commands or permissions to worry about. Everything
@@ -72,8 +81,10 @@ is handled by config file only.
 
 ## Caveats
 ### Memory and Disk Usage
-At the moment, all previous attempts are retained on the server, which can cause significant RAM and
-Disk usage. If you run into trouble, you may need to `/mvdelete` some old worlds.
+If your server is running out of RAM or disk space to store old attempts, try reducing the number
+of attempts that are retained (using `attempt.attemptsToKeep` in the config file). If you can't
+launch the server to do this, delete the folders manually and remove the relevant blocks from
+`plugins/Multiverse-Core/worlds.yml`
 
 ### Other Game Modes
 MultiplayerHardcore is intended to be used on a server of its own. There is no way for players to

@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class MultiplayerHardcore extends JavaPlugin {
+    private BukkitTask pruner = null;
     private BukkitTask watchdog;
     MultiverseCore mv;
     PlaytimeControl playtime;
@@ -34,11 +35,18 @@ public class MultiplayerHardcore extends JavaPlugin {
         EventListener listener = new EventListener(this);
         getServer().getPluginManager().registerEvents(listener, this);
         watchdog = getServer().getScheduler().runTaskTimer(this, new PlaytimeWatchdog(this), 10*60 * 20, 10*60 * 20);
+        int attemptsToKeep;
+        if ((attemptsToKeep = getConfig().getInt("attempt.attemptsToKeep")) >= 0) {
+            pruner = getServer().getScheduler().runTaskTimer(this, new AttemptPruner(this, getConfig().getString("attempt.worldPrefix"), attemptsToKeep), 30 * 20, 30*60 * 20);
+        }
     }
 
     @Override
     public void onDisable() {
         watchdog.cancel();
+        if (pruner != null) {
+            pruner.cancel();
+        }
     }
 
     String getDeathMessage(EntityDamageEvent.DamageCause cause, String source, String playerName) {
@@ -54,15 +62,15 @@ public class MultiplayerHardcore extends JavaPlugin {
 
     String getCurrentAttempt() {
         FileConfiguration conf = getConfig();
-        return conf.getString("worldAttemptPrefix") + conf.getInt("attempt");
+        return conf.getString("attempt.worldPrefix") + conf.getInt("attempt.current");
     }
 
     String logDeathAndGetNextAttempt(EntityDamageEvent.DamageCause cause, Player player) {
         FileConfiguration conf = getConfig();
         String statRef = "stats." + player.getUniqueId() + "." + cause.name();
-        conf.set("attempt", conf.getInt("attempt")+1);
+        conf.set("attempt.current", conf.getInt("attempt.current")+1);
         conf.set(statRef, conf.getInt(statRef, 0)+1);
-        conf.set("participatedInCurrentAttempt", new ArrayList<String>());
+        conf.set("attempt.participatedInCurrent", new ArrayList<String>());
         saveConfig();
         return getCurrentAttempt();
     }
@@ -85,7 +93,7 @@ public class MultiplayerHardcore extends JavaPlugin {
             }
             getServer().getScheduler().runTaskLater(this, () -> {
                 getLogger().log(Level.INFO, "Saving new attempt...");
-                getConfig().set("participatedInCurrentAttempt", getServer().getOnlinePlayers().stream().map(e -> e.getUniqueId().toString()).collect(Collectors.toList()));
+                getConfig().set("attempt.participatedInCurrent", getServer().getOnlinePlayers().stream().map(e -> e.getUniqueId().toString()).collect(Collectors.toList()));
                 saveConfig();
                 isBusy = false;
             }, 5*20);
@@ -104,13 +112,13 @@ public class MultiplayerHardcore extends JavaPlugin {
     }
 
     boolean hasPlayerParticipatedInAttempt(Player player) {
-        return getConfig().getStringList("participatedInCurrentAttempt").contains(player.getUniqueId().toString());
+        return getConfig().getStringList("attempt.participatedInCurrent").contains(player.getUniqueId().toString());
     }
 
     void addPlayerToCurrentAttempt(Player player) {
-        List<String> current = getConfig().getStringList("participatedInCurrentAttempt");
+        List<String> current = getConfig().getStringList("attempt.participatedInCurrent");
         current.add(player.getUniqueId().toString());
-        getConfig().set("participatedInCurrentAttempt", current);
+        getConfig().set("attempt.participatedInCurrent", current);
         saveConfig();
     }
 

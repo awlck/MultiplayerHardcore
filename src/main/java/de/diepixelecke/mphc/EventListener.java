@@ -40,7 +40,7 @@ public class EventListener implements Listener {
         if (plugin.isBusy) event.disallow(PlayerLoginEvent.Result.KICK_OTHER,
                 "Generating world for the next attempt, stand by...");
         if (!plugin.playtime.isPlaytime()) event.disallow(PlayerLoginEvent.Result.KICK_OTHER,
-                String.format("The next playtime window is at %s.", plugin.playtime.getNextPlaytime()));
+                String.format("The next playtime window is %s.", plugin.playtime.getNextPlaytime()));
     }
 
     @EventHandler

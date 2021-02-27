@@ -35,6 +35,8 @@ messages:
   generic:
     - "%1$s walked into the light."
 
-worldAttemptPrefix: "attempt"
-# The current attempt number. DO NOT EDIT!
-attempt: 1
+attempt:
+  worldPrefix: "attempt"
+  attemptsToKeep: 10
+  # The current attempt number. DO NOT EDIT!
+  current: 1
