@@ -29,6 +29,7 @@ public class EventListener implements Listener {
             event.setCancelled(true);
             String msg = plugin.getDeathMessage(event.getCause(), DamageSourceFinder.describeSource(event), player.getDisplayName());
             Bukkit.broadcastMessage(msg);
+            plugin.messenger.sendMessageIfConfigured(msg);
             String nextWorld;
             if (event instanceof EntityDamageByEntityEvent) {
                 EntityDamageByEntityEvent evt = (EntityDamageByEntityEvent) event;

@@ -10,6 +10,11 @@ timeOfPlay:
   SATURDAY: "open"
   SUNDAY: "open"
 
+# For posting player death notices to Discord using a webhook
+discord:
+  enabled: false
+  webhookUrl: null
+
 # Fancy death messages
 messages:
   # Will be appended to every other message.

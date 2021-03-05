@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public class MultiplayerHardcore extends JavaPlugin {
     private BukkitTask pruner = null;
     private BukkitTask watchdog;
+    DiscordMessenger messenger;
     MultiverseCore mv;
     PlaytimeControl playtime;
     boolean isBusy = false;
@@ -37,6 +38,7 @@ public class MultiplayerHardcore extends JavaPlugin {
         playtime = PlaytimeControl.fromConfig(this);
         EventListener listener = new EventListener(this);
         getServer().getPluginManager().registerEvents(listener, this);
+        messenger = new DiscordMessenger(this);
         watchdog = getServer().getScheduler().runTaskTimer(this, new PlaytimeWatchdog(this), 10*60 * 20, 10*60 * 20);
         int attemptsToKeep;
         if ((attemptsToKeep = getConfig().getInt("attempt.attemptsToKeep")) >= 0) {
