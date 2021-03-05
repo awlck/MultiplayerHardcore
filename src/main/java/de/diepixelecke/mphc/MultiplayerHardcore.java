@@ -10,7 +10,10 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -65,9 +68,14 @@ public class MultiplayerHardcore extends JavaPlugin {
         return conf.getString("attempt.worldPrefix") + conf.getInt("attempt.current");
     }
 
-    String logDeathAndGetNextAttempt(EntityDamageEvent.DamageCause cause, Player player) {
+    String logDeathAndGetNextAttempt(EntityDamageEvent.DamageCause cause, Player dying, Player killer) {
         FileConfiguration conf = getConfig();
-        String statRef = "stats." + player.getUniqueId() + "." + cause.name();
+        String statRef;
+        if (killer != null)
+            statRef = "stats." + dying.getName() + ".byPlayer." + killer.getUniqueId() + "." + cause.name();
+        else
+            statRef = "stats." + dying.getUniqueId() + "." + cause.name();
+
         conf.set("attempt.current", conf.getInt("attempt.current")+1);
         conf.set(statRef, conf.getInt(statRef, 0)+1);
         conf.set("attempt.participatedInCurrent", new ArrayList<String>());

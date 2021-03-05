@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -28,7 +29,12 @@ public class EventListener implements Listener {
             event.setCancelled(true);
             String msg = plugin.getDeathMessage(event.getCause(), DamageSourceFinder.describeSource(event), player.getDisplayName());
             Bukkit.broadcastMessage(msg);
-            String nextWorld = plugin.logDeathAndGetNextAttempt(event.getCause(), player);
+            String nextWorld;
+            if (event instanceof EntityDamageByEntityEvent) {
+                EntityDamageByEntityEvent evt = (EntityDamageByEntityEvent) event;
+                nextWorld = plugin.logDeathAndGetNextAttempt(event.getCause(), player, evt.getDamager() instanceof Player ? (Player) evt.getDamager() : null);
+            } else nextWorld = plugin.logDeathAndGetNextAttempt(event.getCause(), player, null);
+
             plugin.createWorldAndMoveEveryone(nextWorld, msg);
         }
     }
