@@ -113,6 +113,9 @@ public class MultiplayerHardcore extends JavaPlugin {
         boolean success_nether = mv.getMVWorldManager().addWorld(newWorldName + "_nether", World.Environment.NETHER, null, WorldType.NORMAL, true, null);
         boolean success_end = mv.getMVWorldManager().addWorld(newWorldName + "_the_end", World.Environment.THE_END, null, WorldType.NORMAL, true, null);
         if (success && success_nether && success_end) {
+            getServer().dispatchCommand(getServer().getConsoleSender(), String.format("mv modify set difficulty hard %s", newWorldName));
+            getServer().dispatchCommand(getServer().getConsoleSender(), String.format("mv modify set difficulty hard %s_nether", newWorldName));
+            getServer().dispatchCommand(getServer().getConsoleSender(), String.format("mv modify set difficulty hard %s_the_end", newWorldName));
             getServer().dispatchCommand(getServer().getConsoleSender(), String.format("mvnp link nether %1$s %1$s_nether", newWorldName));
             getServer().dispatchCommand(getServer().getConsoleSender(), String.format("mvnp link end %1$s %1$s_the_end", newWorldName));
             return true;
