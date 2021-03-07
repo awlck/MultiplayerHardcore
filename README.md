@@ -16,6 +16,7 @@ there (clearing out inventories and resetting expecience)
 yet)
 * Close the server on a schedule (i.e. only allow players onto the server at certain times) to ensure
 nobody grinds away every night and beats the game single-handedly
+* Post death messages to Discord via a webhook.
 
 ## Dependencies
 * Multiverse-Core (4.2.2) (compile, run)
@@ -30,6 +31,12 @@ Schedule for when players should be allowed onto the server. Possible values for
 beginning, it is interpreted to be on the next day, i.e. writing `FRIDAY: 16:30-02:00` would open
 the server starting fridays at 16:30hrs (4:30pm) until saturday at 02:00hrs (2am). All times are
 interpreted as server local time.
+
+### `discord`
+* `enabled`: `true` to attempt using a Discord webhook, `false` to disable this feature altogether
+  (the default).
+* `webhookUrl`: The URL to try and send messages to, if enabled above. See [Discord's documentation](https://support.discord.com/hc/articles/228383668-Einleitung-in-Webhooks)
+  if you don't know how to get create one.
 
 ### `messages`
 Custom messages to display when a player dies. `%1$s` is replaced with the dying player, `%2$s` is
