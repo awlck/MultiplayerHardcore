@@ -141,7 +141,8 @@ public class MultiplayerHardcore extends JavaPlugin {
         if (player.isSleeping())
             player.wakeup(false);
         player.getInventory().clear();
-        player.setTotalExperience(0);
+        player.setExp(0.0f);
+        player.setLevel(0);
         getServer().dispatchCommand(getServer().getConsoleSender(), "effect clear " + player.getName());
         player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getBaseValue());
         player.setFoodLevel(20);
