@@ -1,6 +1,6 @@
 name: MultiplayerHardcore
 author: ArdiMaster
-version: 1.0-SNAPSHOT
+version: 1.0.0b1
 main: de.diepixelecke.mphc.MultiplayerHardcore
 api-version: 1.16
 depend:
