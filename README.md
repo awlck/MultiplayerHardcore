@@ -17,6 +17,7 @@ yet)
 * Close the server on a schedule (i.e. only allow players onto the server at certain times) to ensure
 nobody grinds away every night and beats the game single-handedly
 * Post death messages to Discord via a webhook.
+* Display the current attempt number in the server MOTD
 
 ## Dependencies
 * Multiverse-Core (4.2.2) (compile, run)
@@ -28,7 +29,7 @@ nobody grinds away every night and beats the game single-handedly
 ### `timeOfPlay`
 Schedule for when players should be allowed onto the server. Possible values for each day are `open`
 (all day), `closed` (all day), or a time span like `16:30-22:00`. If the ending time is before the
-beginning, it is interpreted to be on the next day, i.e. writing `FRIDAY: 16:30-02:00` would open
+beginning, it is interpreted to be on the next day, e.g. writing `FRIDAY: 16:30-02:00` would open
 the server starting fridays at 16:30hrs (4:30pm) until saturday at 02:00hrs (2am). All times are
 interpreted as server local time.
 
@@ -37,6 +38,18 @@ interpreted as server local time.
   (the default).
 * `webhookUrl`: The URL to try and send messages to, if enabled above. See [Discord's documentation](https://support.discord.com/hc/articles/228383668-Einleitung-in-Webhooks)
   if you don't know how to get create one.
+  
+### `motd`
+* `enabled`: `true` if you want the plugin to handle the server's MOTD, `false` to use the MOTD from
+  the `server.properties` file or another plugin (the default).
+* `line1`: The first line of the MOTD.
+* `line2default`: the format of the second line during normal play. The attempt number is substituted
+  for `%d`. (Example: `Attempt #%d`)
+* `line2busy`: the text of the second line while the server is busy generating a new world.
+* `line2broken`: the text of the second line when generating a new world has failed, and the server
+  is not allowing players in.
+* `line2closed`: the text of the second line while the server is closed (see `timeOfPlay`). The
+  beginning of the next playtime window is substituted for `%s`.
 
 ### `messages`
 Custom messages to display when a player dies. `%1$s` is replaced with the dying player, `%2$s` is

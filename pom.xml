@@ -6,7 +6,7 @@
 
     <groupId>de.diepixelecke</groupId>
     <artifactId>MultiplayerHardcore</artifactId>
-    <version>1.0.0b1</version>
+    <version>1.0.0b2</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>

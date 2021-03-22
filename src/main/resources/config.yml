@@ -15,6 +15,14 @@ discord:
   enabled: false
   webhookUrl: null
 
+motd:
+  enabled: false
+  line1: "Multiplayer Hardcore!"
+  line2default: "Attempt #%d"
+  line2closed: "Next playtime: %s"
+  line2busy: "(Busy, try again soon!)"
+  line2broken: "Broken :("
+
 # Fancy death messages
 messages:
   # Will be appended to every other message.
