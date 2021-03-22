@@ -28,25 +28,28 @@ messages:
   # Will be appended to every other message.
   ending: "Your journey begins anew..."
   # Messages for specific death causes
-  DROWNING:
-    - "%1$s drowned."
-  FALL:
-    - "%1$s falls to doom!"
-  PROJECTILE:
-    - "%1$s was shot to death by %2$s."
-  LIGHTNING:
-    - "And it came to pass that %1$s was struck by lightning!"
-  ENTITY_EXPLOSION:
-    - "%2$s blew itself up, taking %1$s with it."
-  FALLING_BLOCK:
-    - "%1$s was crushed by a falling %2$s."
   DRAGON_BREATH:
     - "%1$s burned up while making a valiant stand against %2$s."
+  DROWNING:
+    - "%1$s drowned."
+  ENTITY_ATTACK:
+    - "%1$s was butchered by %2$s."
+  ENTITY_EXPLOSION:
+    - "%2$s blew itself up, taking %1$s with it."
+  FALL:
+    - "%1$s falls to doom!"
+  FALLING_BLOCK:
+    - "%1$s was crushed by a falling %2$s."
+  LIGHTNING:
+    - "And it came to pass that %1$s was struck by lightning!"
   MAGIC:
-    - "%1$s was snuffed out by $2%s's evil spell."
+    - "%1$s was snuffed out by %1$s's evil spell."
+  PROJECTILE:
+    - "%1$s was shot to death by %2$s."
   # Messages for when there are no specific messages for the death cause in question.
   generic:
     - "%1$s walked into the light."
+    - "%1$s died."
 
 attempt:
   worldPrefix: "attempt"
