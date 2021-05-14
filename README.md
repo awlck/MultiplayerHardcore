@@ -23,7 +23,7 @@ nobody grinds away every night and beats the game single-handedly
 * Multiverse-Core (4.2.2) (compile, run)
 * Multiverse-NetherPortals (run)
 
-**Built for**: Spigot 1.16.4
+**Built for**: Spigot 1.16.5, Java 11
 
 ## Config
 ### `timeOfPlay`
