@@ -1,6 +1,7 @@
 package de.diepixelecke.mphc;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,7 +31,9 @@ public class EventListener implements Listener {
         if (!(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
         double newHealth = player.getHealth() - event.getFinalDamage();
-        if (newHealth <= 0) {
+        if (newHealth <= 0 &&
+                player.getInventory().getItemInOffHand().getType() != Material.TOTEM_OF_UNDYING &&
+                player.getInventory().getItemInMainHand().getType() != Material.TOTEM_OF_UNDYING) {
             event.setCancelled(true);
             String msg = plugin.getDeathMessage(event.getCause(), DamageSourceFinder.describeSource(event), player.getDisplayName());
             Bukkit.broadcastMessage(msg);
